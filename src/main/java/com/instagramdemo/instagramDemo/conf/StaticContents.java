@@ -13,8 +13,8 @@ import java.util.Arrays;
 @EnableWebMvc
 public class StaticContents implements WebMvcConfigurer {
 
-    private String[][] staticMappings = {
-            {"/static/**", "classpath:/static/"},
+    private final String[][] staticMappings = {
+            {"/static/css/**", "classpath:/static/css/"},
     };
 
     @Override
