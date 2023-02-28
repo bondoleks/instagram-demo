@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -40,6 +41,13 @@ public class BlogController {
     @GetMapping("/profile")
     public String profile(Model model){
         return "profile";
+    }
+
+    @PostMapping("/profile")
+    public String registrationForm(@RequestParam String login, @RequestParam String password,  Model model){
+        Post post = new Post(login, password);
+        postRepository.save(post);
+        return "redirect:/home";
     }
 
 //    @GetMapping("/blog/add")
