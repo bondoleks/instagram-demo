@@ -11,17 +11,15 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String title, anons, fullText;
-
-    private int views;
+    private String login;
+    private String password;
 
     public Post() {
     }
 
-    public Post(String title, String anons, String fullText) {
-        this.title = title;
-        this.anons = anons;
-        this.fullText = fullText;
+    public Post(String login, String password) {
+        this.login = login;
+        this.password = password;
     }
 
     public Long getId() {
@@ -32,35 +30,21 @@ public class Post {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getLogin() {
+        return login;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
-    public String getAnons() {
-        return anons;
+    public String getPassword() {
+        return password;
     }
 
-    public void setAnons(String anons) {
-        this.anons = anons;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getFullText() {
-        return fullText;
-    }
 
-    public void setFullText(String fullText) {
-        this.fullText = fullText;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public void setViews(int views) {
-        this.views = views;
-    }
 }
