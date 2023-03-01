@@ -3,6 +3,7 @@ package com.instagramdemo.instagramDemo.controllers;
 
 import com.instagramdemo.instagramDemo.model.Post;
 import com.instagramdemo.instagramDemo.repo.PostRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,10 +45,16 @@ public class BlogController {
     }
 
     @PostMapping("/profile")
-    public String registrationForm(@RequestParam String login, @RequestParam String password,  Model model){
+    public String registrationForm(@RequestParam(required = false) String enter, @RequestParam String login, @RequestParam String password, Model model){
         Post post = new Post(login, password);
-        postRepository.save(post);
-        return "redirect:/home";
+        if(enter != null){
+            for(Post x : postRepository.findAll()){
+                if (x.getLogin().equals(post.getLogin()) && x.getPassword().equals(post.getPassword())) return "redirect:/home";
+            }
+            return "redirect:/profile";
+        }
+            postRepository.save(post);
+            return "redirect:/home";
     }
 
 //    @GetMapping("/blog/add")
