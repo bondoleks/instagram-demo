@@ -3,7 +3,6 @@ package com.instagramdemo.instagramDemo.controllers;
 
 import com.instagramdemo.instagramDemo.model.Post;
 import com.instagramdemo.instagramDemo.repo.PostRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -39,22 +37,48 @@ public class BlogController {
         return "likes";
     }
 
-    @GetMapping("/profile")
-    public String profile(Model model){
-        return "profile";
+    @GetMapping("/registration")
+    public String registration(Model model){
+        return "registration";
     }
 
-    @PostMapping("/profile")
+    @PostMapping("/registration")
     public String registrationForm(@RequestParam(required = false) String enter, @RequestParam String login, @RequestParam String password, Model model){
         Post post = new Post(login, password);
         if(enter != null){
             for(Post x : postRepository.findAll()){
-                if (x.getLogin().equals(post.getLogin()) && x.getPassword().equals(post.getPassword())) return "redirect:/home";
+                if (x.getLogin().equals(post.getLogin()) && x.getPassword().equals(post.getPassword())) return "redirect:/profile/" + x.getId();
             }
-            return "redirect:/profile";
+            return "redirect:/registration";
         }
             postRepository.save(post);
-            return "redirect:/home";
+            return "redirect:/profile/" + post.getId();
+    }
+
+//    @GetMapping("/profile")
+//    public String profile(Model model){
+//        return "profile";
+//    }
+
+    @GetMapping("/profile/{id}")
+    public String profile(@PathVariable(value = "id") long id, Model model){
+        if(!postRepository.existsById(id)){
+            return "redirect:/registration";
+        }
+        Optional<Post> post = postRepository.findById(id);
+        ArrayList<Post> result = new ArrayList<>();
+        post.ifPresent(result::add);
+        model.addAttribute("post", result);
+        return "profile";
+    }
+    @PostMapping("/profile/{id}")
+    public String addPhoto(@PathVariable(value = "id") long id, @RequestParam(required = false) String add, @RequestParam String photo, Model model){
+        Post postPhoto = postRepository.findById(id).get();
+        if(add != null && postRepository.existsById(id)){
+            postPhoto.setPhotoAlbum(photo);
+            postRepository.save(postPhoto);
+        }
+        return "redirect:/profile/" + id;
     }
 
 //    @GetMapping("/blog/add")
