@@ -14,6 +14,10 @@ public class Post {
     private String login;
     private String password;
 
+    private String photoAvatar;
+    private String photoAlbum;
+
+
     public Post() {
     }
 
@@ -46,5 +50,19 @@ public class Post {
         this.password = password;
     }
 
+    public String getPhotoAvatar() {
+        return photoAvatar;
+    }
 
+    public void setPhotoAvatar(String photoAvatar) {
+        this.photoAvatar = photoAvatar;
+    }
+
+    public String getPhotoAlbum() {
+        return photoAlbum;
+    }
+
+    public void setPhotoAlbum(String photoAlbum) {
+        this.photoAlbum = photoAlbum;
+    }
 }

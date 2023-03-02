@@ -1,20 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Blog</title>
+    <meta http-equiv="Content-Type" content="text/html; charest=UTF-8" />
 </head>
 <body>
 <header th:insert="blocks/header :: header"></header>
-<form method="post">
-    <input type="text" name="login"><br>
-    <input type="text" name="password"><br>
-    <button name="enter" class="btn btn-warning" type="submit">Enter</button>
-    <button name="registration" class="btn btn-warning" type="submit">Registration</button>
+<div class="container mt-5">
+    <div th:each="element :${post}">
+        <h1 th:text="${element.id}"></h1>
+        <p th:text="${element.login}"></p>
+        <p th:text="${element.password}"></p>
+            <img th:src="${element.photoAlbum}"
+                 alt="img1">
 
+
+</div>
+</div>
+<form method="post">
+    <input type="text" name="photo"><br>
+    <button name="add" class="btn btn-warning" type="submit">Add photo</button>
 </form>
+</main>
 </body>
 </html>

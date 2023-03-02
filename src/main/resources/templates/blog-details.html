@@ -10,9 +10,9 @@
 <header th:insert="blocks/header :: header"></header>
 <div class="container mt-5">
     <div th:each="element :${post}">
-        <h1 th:text="${element.title}"></h1>
-        <p th:text="${element.fullText}"></p>
-        <p th:text="${element.views}"></p>
+        <h1 th:text="${element.id}"></h1>
+        <p th:text="${element.login}"></p>
+        <p th:text="${element.password}"></p>
         <a th:href="'/blog/' + ${element.id} + '/edit'" class="btn btn-warning">Redact</a>
         <form th:action="'/blog/' + ${element.id} + '/remove'" method="post">
             <button class="btn btn-warning" type="submit">Deleted</button>
