@@ -3,6 +3,8 @@ package com.instagramdemo.instagramDemo.controllers;
 
 import com.instagramdemo.instagramDemo.model.Post;
 import com.instagramdemo.instagramDemo.repo.PostRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 public class BlogController {
+
+    private final static String cookieName = "CookieTest";
 
     @Autowired
     private PostRepository postRepository;
@@ -38,7 +43,8 @@ public class BlogController {
     }
 
     @GetMapping("/registration")
-    public String registration(Model model){
+    public String registration(HttpServletResponse rs, Model model){
+        rs.addCookie(new Cookie(cookieName, UUID.randomUUID().toString()));
         return "registration";
     }
 
@@ -47,7 +53,8 @@ public class BlogController {
         Post post = new Post(login, password);
         if(enter != null){
             for(Post x : postRepository.findAll()){
-                if (x.getLogin().equals(post.getLogin()) && x.getPassword().equals(post.getPassword())) return "redirect:/profile/" + x.getId();
+                if (x.getLogin().equals(post.getLogin()) && x.getPassword().equals(post.getPassword()))
+                    return "redirect:/profile/" + x.getId();
             }
             return "redirect:/registration";
         }

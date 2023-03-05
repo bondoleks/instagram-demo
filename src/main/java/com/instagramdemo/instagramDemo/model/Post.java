@@ -17,6 +17,8 @@ public class Post {
     private String photoAvatar;
     private String photoAlbum;
 
+    private String Cookie;
+
 
     public Post() {
     }
@@ -64,5 +66,13 @@ public class Post {
 
     public void setPhotoAlbum(String photoAlbum) {
         this.photoAlbum = photoAlbum;
+    }
+
+    public String getCookie() {
+        return Cookie;
+    }
+
+    public void setCookie(String cookie) {
+        Cookie = cookie;
     }
 }
