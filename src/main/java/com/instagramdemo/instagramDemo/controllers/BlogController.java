@@ -2,10 +2,12 @@ package com.instagramdemo.instagramDemo.controllers;
 
 
 import com.instagramdemo.instagramDemo.model.Post;
-import com.instagramdemo.instagramDemo.repo.PostRepository;
+import com.instagramdemo.instagramDemo.service.PostService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,16 +20,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Controller
+@RequiredArgsConstructor
 public class BlogController {
 
     private final static String cookieName = "CookieTest";
 
-    @Autowired
-    private PostRepository postRepository;
+    private final PostService postService;
 
     @GetMapping("/home")
     public String home(Model model){
-        Iterable<Post> posts = postRepository.findAll();
+        Iterable<Post> posts = postService.findAll();
         model.addAttribute("posts", posts);
         return "home";
     }
@@ -48,17 +50,21 @@ public class BlogController {
         return "registration";
     }
 
+    @Nullable
     @PostMapping("/registration")
     public String registrationForm(@RequestParam(required = false) String enter, @RequestParam String login, @RequestParam String password, Model model){
         Post post = new Post(login, password);
         if(enter != null){
-            for(Post x : postRepository.findAll()){
-                if (x.getLogin().equals(post.getLogin()) && x.getPassword().equals(post.getPassword()))
-                    return "redirect:/profile/" + x.getId();
+            for(Post x : postService.findAll()){
+                try {
+                    if (x.getLogin().equals(post.getLogin()) && x.getPassword().equals(post.getPassword()))
+                        return "redirect:/profile/" + x.getId();
+                } catch (NullPointerException nullPointerException){
+                    return "redirect:/registration";
+                }
             }
-            return "redirect:/registration";
         }
-            postRepository.save(post);
+            postService.save(post);
             return "redirect:/profile/" + post.getId();
     }
 
@@ -69,10 +75,10 @@ public class BlogController {
 
     @GetMapping("/profile/{id}")
     public String profile(@PathVariable(value = "id") long id, Model model){
-        if(!postRepository.existsById(id)){
+        if(!postService.existsById(id)){
             return "redirect:/registration";
         }
-        Optional<Post> post = postRepository.findById(id);
+        Optional<Post> post = postService.findById(id);
         ArrayList<Post> result = new ArrayList<>();
         post.ifPresent(result::add);
         model.addAttribute("post", result);
@@ -80,10 +86,10 @@ public class BlogController {
     }
     @PostMapping("/profile/{id}")
     public String addPhoto(@PathVariable(value = "id") long id, @RequestParam(required = false) String add, @RequestParam String photo, Model model){
-        Post postPhoto = postRepository.findById(id).get();
-        if(add != null && postRepository.existsById(id)){
+        Post postPhoto = postService.findById(id).get();
+        if(add != null && postService.existsById(id)){
             postPhoto.setPhotoAlbum(photo);
-            postRepository.save(postPhoto);
+            postService.save(postPhoto);
         }
         return "redirect:/profile/" + id;
     }
