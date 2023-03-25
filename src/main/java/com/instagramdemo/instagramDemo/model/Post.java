@@ -2,35 +2,36 @@ package com.instagramdemo.instagramDemo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Bean;
 
 @Entity
 @Data
-@Table(name = "post")
-public class Post {
+@Table(name = "new")
+@NoArgsConstructor
 
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "login")
-    private String login;
+    @Column(name = "username")
+    private String username;
     @Column(name = "password")
     private String password;
 
-    @Column(name = "photoAvatar")
-    private String photoAvatar;
-    @Column(name = "photoAlbum")
-    private String photoAlbum;
+//    @Column(name = "photoAvatar")
+//    private String photoAvatar;
+//    @Column(name = "photoAlbum")
+//    private String photoAlbum;
 
-    @Column(name = "Cookie")
-    private String Cookie;
+//    @Column(name = "Cookie")
+//    private String Cookie;
 
 
-    public Post() {
-    }
 
-    public Post(String login, String password) {
-        this.login = login;
+    public Post(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 }
