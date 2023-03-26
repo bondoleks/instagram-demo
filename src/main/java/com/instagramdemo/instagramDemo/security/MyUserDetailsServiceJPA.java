@@ -1,7 +1,7 @@
 package com.instagramdemo.instagramDemo.security;
 
-import com.instagramdemo.instagramDemo.model.Post;
-import com.instagramdemo.instagramDemo.repo.PostRepository;
+import com.instagramdemo.instagramDemo.model.DbUser;
+import com.instagramdemo.instagramDemo.repo.DbUserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
@@ -13,9 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @RequiredArgsConstructor
 public class MyUserDetailsServiceJPA implements UserDetailsService {
 
-    private final PostRepository repo;
+    private final DbUserRepo dbUserRepo;
 
-    private UserDetails mapper(Post dbUser) {
+    private UserDetails mapper(DbUser dbUser) {
         return User
                 .withUsername(dbUser.getUsername())
                 .password(dbUser.getPassword())
@@ -25,7 +25,7 @@ public class MyUserDetailsServiceJPA implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repo.findByUsername(username)
+        return dbUserRepo.findByUsername(username)
                 .map(this::mapper)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("user `%s` not found", username)
