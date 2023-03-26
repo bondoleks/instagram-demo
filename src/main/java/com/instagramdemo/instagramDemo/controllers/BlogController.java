@@ -1,10 +1,14 @@
 package com.instagramdemo.instagramDemo.controllers;
 
 
-import com.instagramdemo.instagramDemo.model.Post;
-import com.instagramdemo.instagramDemo.service.PostService;
+import com.instagramdemo.instagramDemo.model.DbUser;
+
+import com.instagramdemo.instagramDemo.repo.DbUserRepo;
+
+import com.instagramdemo.instagramDemo.security.DbUsersInitial;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +25,13 @@ public class BlogController {
 
 //    private final static String cookieName = "CookieTest";
 
-    private final PostService postService;
+    private final DbUserRepo postService;
+    private final DbUsersInitial dbUsersInitial;
+//    private final PasswordEncoder enc;
 
     @GetMapping("/home")
     public String home(Model model){
-        Iterable<Post> posts = postService.findAll();
+        Iterable<DbUser> posts = postService.findAll();
         model.addAttribute("posts", posts);
         return "home";
     }
@@ -46,12 +52,12 @@ public class BlogController {
         return "registration";
     }
 
-//    @Nullable
-//    @PostMapping("/registration")
-//    public String registrationForm(@RequestParam(required = false) String enter, @RequestParam String login, @RequestParam String password, Model model){
-//        Post post = new Post(login, password);
-//        if(enter != null){
-//            for(Post x : postService.findAll()){
+    @Nullable
+    @PostMapping("/registration")
+    public String registrationForm(@RequestParam(required = false) String enter, @RequestParam String login, @RequestParam String password, Model model){
+        DbUser post = new DbUser(login, password);
+        if(enter != null){
+//            for(DbUser x : postService.findAll()){
 //                try {
 //                    if (x.getUsername().equals(post.getUsername()) && x.getPassword().equals(post.getPassword()))
 //                        return "redirect:/profile/" + x.getId();
@@ -59,27 +65,28 @@ public class BlogController {
 //                    return "redirect:/registration";
 //                }
 //            }
-//        }
-//            postService.save(post);
-//            return "redirect:/profile/" + post.getId();
-//    }
+            System.out.println("777");
+        }
+            dbUsersInitial.create(login, password);
+            return "redirect:/profile/" + post.getId();
+    }
 
-//    @GetMapping("/profile")
-//    public String profile(Model model){
-//        return "profile";
-//    }
+    @GetMapping("/profile")
+    public String profile(Model model){
+        return "profile";
+    }
 
-//    @GetMapping("/profile/{id}")
-//    public String profile(@PathVariable(value = "id") long id, Model model){
-//        if(!postService.existsById(id)){
-//            return "redirect:/registration";
-//        }
-//        Optional<Post> post = postService.findById(id);
-//        ArrayList<Post> result = new ArrayList<>();
-//        post.ifPresent(result::add);
-//        model.addAttribute("post", result);
-//        return "profile";
-//    }
+    @GetMapping("/profile/{id}")
+    public String profile(@PathVariable(value = "id") Integer id, Model model){
+        if(!postService.existsById(id)){
+            return "redirect:/registration";
+        }
+        Optional<DbUser> post = postService.findById(id);
+        ArrayList<DbUser> result = new ArrayList<>();
+        post.ifPresent(result::add);
+        model.addAttribute("post", result);
+        return "profile";
+    }
 //    @PostMapping("/profile/{id}")
 //    public String addPhoto(@PathVariable(value = "id") long id, @RequestParam(required = false) String add, @RequestParam String photo, Model model){
 //        Post postPhoto = postService.findById(id).get();
