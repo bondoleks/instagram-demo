@@ -7,6 +7,7 @@ import com.instagramdemo.instagramDemo.repo.DbUserRepo;
 
 import com.instagramdemo.instagramDemo.security.DbUsersInitial;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,13 +22,13 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class BlogController {
 
 //    private final static String cookieName = "CookieTest";
 
     private final DbUserRepo postService;
-    private final DbUsersInitial dbUsersInitial;
-//    private final PasswordEncoder enc;
+    private final PasswordEncoder enc;
 
     @GetMapping("/home")
     public String home(Model model){
@@ -48,6 +49,7 @@ public class BlogController {
 
     @GetMapping("/registration")
     public String registration(Model model){
+        log.info("Get");
 //        rs.addCookie(new Cookie(cookieName, UUID.randomUUID().toString()));
         return "registration";
     }
@@ -55,7 +57,8 @@ public class BlogController {
     @Nullable
     @PostMapping("/registration")
     public String registrationForm(@RequestParam(required = false) String enter, @RequestParam String login, @RequestParam String password, Model model){
-        DbUser post = new DbUser(login, password);
+        DbUser post = new DbUser(login, enc.encode(password));
+        log.info("Post");
         if(enter != null){
 //            for(DbUser x : postService.findAll()){
 //                try {
@@ -67,8 +70,9 @@ public class BlogController {
 //            }
             System.out.println("777");
         }
-            dbUsersInitial.create(login, password);
-            return "redirect:/profile/" + post.getId();
+        log.info("Create");
+        postService.save(post);
+        return "redirect:/profile/" + post.getId();
     }
 
     @GetMapping("/profile")
