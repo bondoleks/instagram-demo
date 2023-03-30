@@ -68,11 +68,12 @@ public class BlogController {
 //                    return "redirect:/registration";
 //                }
 //            }
-            System.out.println("777");
+            log.info("Create");
+            postService.save(post);
         }
         log.info("Create");
         postService.save(post);
-        return "redirect:/profile/" + post.getId();
+        return "redirect:/home";
     }
 
     @GetMapping("/profile")

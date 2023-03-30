@@ -16,7 +16,9 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/registration").permitAll()
+//                .antMatchers.permitAll()
+//
+//                .antMatchers("/registration").permitAll()
                 .antMatchers("/home").authenticated()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/likes").hasRole("USER")
