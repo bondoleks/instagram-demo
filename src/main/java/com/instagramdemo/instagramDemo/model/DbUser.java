@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Data
 @Entity
@@ -13,13 +14,28 @@ public class DbUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Integer id;
+    private Integer id;
 
-    String username;
-    String password;
+    private String username;
+    private String password;
+    private String roles;
 
-    public DbUser(String username, String password) {
+    private final static String DELIMITER = ":";
+
+    public DbUser(String username, String password, String... roles) {
         this.username = username;
         this.password = password;
+        setRoles(roles);
     }
+
+    public String[] getRoles() {
+        return Optional.ofNullable(roles)
+                .map(x -> x.split(DELIMITER))
+                .orElseGet(() -> new String[]{});
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = String.join(DELIMITER, roles);
+    }
+
 }
