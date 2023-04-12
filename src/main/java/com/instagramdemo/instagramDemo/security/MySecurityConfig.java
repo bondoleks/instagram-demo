@@ -13,18 +13,17 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors().disable() .csrf().disable();
         http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-//                .antMatchers.permitAll()
-//
-//                .antMatchers("/registration").permitAll()
-                .antMatchers("/home").authenticated()
-                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/registration").permitAll()
+                .antMatchers("/home").permitAll()
+                .antMatchers("/admin").permitAll()
                 .antMatchers("/likes").hasRole("USER")
                 .antMatchers("/message").hasRole("USER")
-                .antMatchers("/profile").hasAnyRole("USER", "ADMIN")
-                .anyRequest().authenticated();
+                .antMatchers("/profile").hasRole("USER")
+                .anyRequest().permitAll();
 
         http.rememberMe();
 
